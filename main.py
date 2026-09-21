@@ -38,8 +38,6 @@ train_losses, val_losses, train_accuracies, val_accuracies = nn.train (
     X_train, y_train_one_hot, X_val, y_val_one_hot, epochs=100, batch_size=32
 )
 
-# TODO: Ajouter une validation croisee pour evaluer la robustesse du modele
-# TODO: Implementer l'optimiseur Adam pour une meilleure convergence
 
 # Predictions et evaluation
 label_encoder = joblib.load('artifacts/label_encoder.joblib')
@@ -55,7 +53,7 @@ sns.heatmap (cm, annot=True, fmt='d', cmap='Blues')
 plt.title('Matrice de confusion (Test set)')
 plt.xlabel('Predit')
 plt.ylabel('Reel')
-plt.savefig('confusion_matrix.png')
+plt.savefig('assets/confusion_matrix.png')
 plt.close()
 
 # Courbes de perte et d'accuracy
@@ -78,5 +76,5 @@ ax2.set_ylabel('Precision')
 ax2.legend()
 
 plt.tight_layout()
-fig.savefig('loss_accuracy_plot.png')
+fig.savefig('assets/loss_accuracy_plot.png')
 plt.close()
