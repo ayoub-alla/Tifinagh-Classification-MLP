@@ -33,9 +33,10 @@ assert isinstance (y_test_one_hot, np.ndarray), "y_test_one_hot must be a numpy 
 
 # Creer et entrainer le modele
 layer_sizes = [X_train.shape [1], 64, 32, 33] # 64 et 32 neurones caches, 33 classes
-nn = MultiClass_NN(layer_sizes, learning_rate=0.01)
+#L2 used 0.15 
+nn = MultiClass_NN(layer_sizes, learning_rate=0.08 , lambda_reg=0.15 )
 train_losses, val_losses, train_accuracies, val_accuracies = nn.train (
-    X_train, y_train_one_hot, X_val, y_val_one_hot, epochs=100, batch_size=32
+    X_train, y_train_one_hot, X_val, y_val_one_hot, epochs=100, batch_size=64
 )
 
 
