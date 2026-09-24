@@ -161,7 +161,7 @@ class MultiClass_NN:
             train_accuracies.append(train_accuracy)
             val_accuracies.append(val_accuracy)
 
-            if epoch % 10 == 0:
+            if epoch % 10 == 0 or epoch == ( epochs - 1 ):
                 print (f"Epoch {epoch}, Train Loss: {train_loss:.4f}, Val Loss: {val_loss:.4f}, "
                        f"Train Acc: {train_accuracy:.4f}, Val Acc: {val_accuracy:.4f} , lr = {self.learning_rate}")
 

@@ -3,6 +3,7 @@ import numpy as np
 
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.metrics import confusion_matrix, classification_report
+from sklearn.model_selection import KFold
 
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -36,7 +37,7 @@ layer_sizes = [X_train.shape [1], 64, 32, 33] # 64 et 32 neurones caches, 33 cla
 #L2 used 0.15 
 nn = MultiClass_NN(layer_sizes, learning_rate=0.08 , lambda_reg=0.15 )
 train_losses, val_losses, train_accuracies, val_accuracies = nn.train (
-    X_train, y_train_one_hot, X_val, y_val_one_hot, epochs=100, batch_size=64
+    X_train, y_train_one_hot, X_val, y_val_one_hot, epochs=100, batch_size=32
 )
 
 
@@ -79,3 +80,26 @@ ax2.legend()
 plt.tight_layout()
 fig.savefig('assets/loss_accuracy_plot.png')
 plt.close()
+
+X_full = np.concatenate([X_train, X_val], axis=0)
+y_full = np.concatenate([y_train, y_val], axis=0)
+
+kf = KFold(n_splits=3, shuffle=True, random_state=42)
+fold_val_accuracies = []
+
+for fold, (train_idx, val_idx) in enumerate(kf.split(X_full)):
+    X_tr, X_v = X_full[train_idx], X_full[val_idx]
+    y_tr, y_v = y_full[train_idx], y_full[val_idx]
+
+    y_tr_oh = one_hot_encoder.transform(y_tr.reshape(-1, 1))
+    y_v_oh = one_hot_encoder.transform(y_v.reshape(-1, 1))
+
+    nn = MultiClass_NN(layer_sizes, learning_rate=0.08, lambda_reg=0.0)
+    nn.train(X_tr, y_tr_oh, X_v, y_v_oh, epochs=100, batch_size=32)
+
+    val_pred = nn.forward(X_v)
+    acc = nn.compute_accuracy(y_v_oh, val_pred)
+    fold_val_accuracies.append(acc)
+    print(f"Fold {fold+1}: Val Acc = {acc:.4f}")
+
+print(f"\nMean CV Accuracy: {np.mean(fold_val_accuracies):.4f} ± {np.std(fold_val_accuracies):.4f}")
